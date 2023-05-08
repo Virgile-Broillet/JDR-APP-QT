@@ -11,30 +11,26 @@ Entity::Entity()
 {
     this->name = "";
     this->description = "";
-    this->type = "";
     this->inventoryMaxSlot = 0;
 }
 Entity::Entity(const Entity & entity)
 {
     this->name = entity.name;
     this->description = entity.description;
-    this->type = entity.type;
     this->inventoryMaxSlot = entity.inventoryMaxSlot;
     this->inventory = entity.inventory;
     this->skills = entity.skills;
     this->texturePath = entity.texturePath;
 }
-Entity::Entity(const QString name,
-               const QString description,
-               const QString type,
-               const QString texturePath,
+Entity::Entity(const QString & name,
+               const QString & description,
+               const QString & texturePath,
                const unsigned int inventoryMaxSlot,
                const QVector<Stat> & stats,
                const QVector<Item> & inventory,
                const QVector<Skill> & skills)
     : Sheet::Sheet(name, description, texturePath, stats)
 {
-    this->type = type;
     this->inventoryMaxSlot = inventoryMaxSlot;
     this->inventory = inventory;
     this->skills = skills;
@@ -45,26 +41,30 @@ Entity::~Entity()
 }
 void Entity::addEntityToArray(QVector<Entity> & entitiesArray)
 {
-    bool doAdd = true;
+    bool existAlready = false;
     for (int i = 0; i < entitiesArray.count(); i++)
         {
-           if ((entitiesArray.at(i).getName() == this->name) || (this->name.isEmpty()))
+           if (entitiesArray.at(i).getName() == this->name)
             {
-               doAdd = false;
+               existAlready = true;
                qErrnoWarning(errno, "An entity already have this name");
                break;
             }
         }
-    if (doAdd)
+    if ((!existAlready) && (!this->name.isEmpty()))
       {
         entitiesArray.push_back(*this);
       }
 }
-QList<Item> Entity::getInventory()const
+QVector<Item> Entity::getInventory()const
 {
     return this->inventory;
 }
-void Entity::addToInventory(const Item item)
+void Entity::setInventory(const QVector<Item> & newInventory)
+{
+    this->inventory = newInventory;
+}
+void Entity::addToInventory(const Item & item)
 {
     if (this->inventory.count() < this->inventoryMaxSlot) //if number of item in inventory < max slot
     {
@@ -75,61 +75,61 @@ void Entity::updateInventorySize(const unsigned int size)
 {
     if (size < this->inventory.count())
     {
-        for (unsigned int i = size; i < this->inventoryMaxSlot; ++i)
+        for (unsigned int i = size; i < this->inventory.count(); ++i)
         {
             this->inventory.pop_back(); //delete last items if there is more than permitted by the new size
         }
     }
     this->inventoryMaxSlot = size; //new inventory size
 }
-void Entity::addSkill(const Skill skill)
+unsigned int Entity::getInventorySlots() const
+{
+    return this->inventoryMaxSlot;
+}
+void Entity::addSkill(const Skill & skill)
 {
     this->skills.push_back(skill);
 }
-QString Entity::getType()const
+QVector<Skill> Entity::getSkills() const
 {
-    return this->type;
+    return this->skills;
 }
-void Entity::setType(const QString type)
+void Entity::setSkills(const QVector<Skill> & newSkills)
 {
-    this->type = type;
-}
-void Entity::setTexturePath(const QString texturePath)
-{
-    this->texturePath = texturePath;
-}
-void Entity::setInventorySlots(unsigned int maxInventory)
-{
-    this->inventoryMaxSlot = maxInventory;
+    this->skills = newSkills;
 }
 void Entity::writeJson(QJsonObject &json, const QString & listIterator) const
 {
     this->Sheet::writeJson(json, listIterator);
-    QString typeKey = "type" + listIterator;
     QString inventoryMaxSlotKey = "inventoryMaxSlot" + listIterator;
     QString texturePathKey = "texturePath" + listIterator;
-    json[typeKey] = this->type;
+    QString nbItemKey = "itemNb" + listIterator;
+    QString nbSkillKey = "skillNb" + listIterator;
+    json[nbItemKey] = this->inventory.count();
+    json[nbSkillKey] = this->skills.count();
     json[inventoryMaxSlotKey] = (int)this->inventoryMaxSlot;
     json[texturePathKey] = this->texturePath;
-    for (unsigned int i = 0; i < this->inventoryMaxSlot; i++)
+
+    unsigned int i;
+    unsigned int j;
+    for (i = 0; i < this->inventory.count(); i++)
     {
-        this->inventory.at(i).writeJson(json, QString::number(i));
+        this->inventory.at(i).writeJson(json, listIterator + QString::number(i));
     }
-    for (unsigned int i = 0; i < this->skills.count(); i++)
+    for (j = 0; j < this->skills.count(); j++)
     {
-        this->skills.at(i).writeJson(json, QString::number(i));
+        this->skills.at(j).writeJson(json, listIterator + QString::number(j +i+1));
     }
 }
 void Entity::readJson(const QJsonObject &json, const QString & listIterator)
 {
     this->Sheet::readJson(json, listIterator);
-    QString typeKey = "type" + listIterator;
     QString inventoryMaxSlotKey = "inventoryMaxSlot" + listIterator;
     QString texturePathKey = "texturePath" + listIterator;
-    if (json.contains(typeKey) && json[typeKey].isString())
-    {
-        this->type = json[typeKey].toString();
-    }
+    QString nbItemKey = "itemNb" + listIterator;
+    QString nbSkillKey = "skillNb" + listIterator;
+    unsigned int nbItem = json[nbItemKey].toInt();
+    unsigned int nbSkill = json[nbSkillKey].toInt();
     if (json.contains(inventoryMaxSlotKey) && json[inventoryMaxSlotKey].isString())
     {
         this->inventoryMaxSlot = json[inventoryMaxSlotKey].toInt();
@@ -139,16 +139,18 @@ void Entity::readJson(const QJsonObject &json, const QString & listIterator)
         this->texturePath = json[texturePathKey].toString();
     }
 
-    for (unsigned int i = 0; i < this->inventoryMaxSlot; i++)
+    unsigned int i;
+    unsigned int j;
+    for (i = 0; i < nbItem; i++)
     {
         Item newItem;
-        newItem.readJson(json, QString::number(i));
+        newItem.readJson(json, listIterator + QString::number(i));
         this->inventory.push_back(newItem);
     }
-    for (unsigned int i = 0; i < this->skills.count(); i++)
+    for (j = 0; j < nbSkill; j++)
     {
         Skill newSkill;
-        newSkill.readJson(json, QString::number(i));
+        newSkill.readJson(json, listIterator + QString::number(j +i+1));
         this->skills.push_back(newSkill);
     }
 }
@@ -172,7 +174,6 @@ void Entity::fillEntitySpec()
     this->description = QString::fromStdString(description);
     cout << "Quel type voulez-vous donner a "<< name << " ?" << endl;
     cin >> type;
-    this->type = QString::fromStdString(type);
     cout << "Combien de cases d'inventaire doit avoir " << name << " au maximum ?" << endl;
     cin >> this->inventoryMaxSlot;
 }

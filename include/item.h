@@ -15,28 +15,33 @@ public:
     Item();
     /**
      * @brief Initiliazed Item class constructor
-     * @param name of the item
-     * @param description of the item
-     * @param texturePath of the item
-     * @param stats array of the item
+     * @param [in] name The name of the item
+     * @param [in] description The description of the item
+     * @param [in] texturePath The texturePath of the item
+     * @param [in] stats The stats array of the item
      */
-    Item(const QString name,
-         const QString description,
-         const QString texturePath,
+    Item(const QString & name,
+         const QString & description,
+         const QString & texturePath,
          const QVector<Stat> & stats);
-    /**
-     * @brief Destroyer of class
-     */
     ~Item();
+    /**
+     * @fn addItemToArray
+     * @brief Add the item to an array
+     * @param [in] itemsArray The array where the item will be added
+     */
+    void addItemToArray(QVector<Item> & itemsArray);
 
 private:
     /**
-     * @brief Show the name and the desc of an object in a textual version
-     * @param item
+     * @fn showItemSpec
+     * @brief (LEGACY) Show the name and the desc of an object in the console
+     * @param [in] item The info of this item will be shown
      */
     void showItemSpec(Item item);
     /**
-     * @brief Fill the name and the desc of an object in a textual version
+     * @fn fillItemSpecs
+     * @brief (LEGACY) Fill the name and the desc of an object in the terminal
      */
     void fillItemSpecs();
 };

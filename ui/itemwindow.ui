@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>EntityWindow</class>
- <widget class="QDialog" name="EntityWindow">
+ <class>ItemWindow</class>
+ <widget class="QDialog" name="ItemWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -19,7 +19,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QListView" name="entityListView">
+        <widget class="QListView" name="itemListView">
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
@@ -98,7 +98,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>EntityWindow</receiver>
+   <receiver>ItemWindow</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -114,7 +114,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>EntityWindow</receiver>
+   <receiver>ItemWindow</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

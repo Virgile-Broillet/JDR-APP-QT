@@ -17,43 +17,49 @@ SOURCES += \
     src/entity.cpp \
     src/skill.cpp \
     src/item.cpp \
-    src/world.cpp \
-    src/display.cpp \
-    src/event.cpp \
     src/stat.cpp \
     src/game.cpp \
     src/sheet.cpp \
-    ui/addentity.cpp \
+    ui/additemtoentity.cpp \
+    ui/additemwindow.cpp \
     ui/addstatwindow.cpp \
     ui/entitywindow.cpp \
+    ui/itemwindow.cpp \
     ui/mainwindow.cpp \
-    ui/musicwindow.cpp \
-    ui/seesheets.cpp
+    ui/skillwindow.cpp \
+    ui/addskillwindow.cpp \
+    ui/addentitywindow.cpp \
+    ui/addskilltoentity.cpp
 
 HEADERS += \
     include/entity.h \
     include/skill.h \
     include/item.h \
-    include/world.h \
-    include/display.h \
-    include/event.h \
     include/stat.h \
     include/game.h \
     include/sheet.h \
-    ui/addentity.h \
+    ui/additemtoentity.h \
+    ui/additemwindow.h \
     ui/addstatwindow.h \
     ui/entitywindow.h \
+    ui/itemwindow.h \
     ui/mainwindow.h \
-    ui/musicwindow.h \
-    ui/seesheets.h
+    ui/skillwindow.h \
+    ui/addskillwindow.h \
+    ui/addentitywindow.h \
+    ui/addskilltoentity.h
 
 FORMS += \
-    ui/addentity.ui \
+    ui/additemtoentity.ui \
+    ui/additemwindow.ui \
     ui/addstatwindow.ui \
     ui/entitywindow.ui \
+    ui/itemwindow.ui \
     ui/mainwindow.ui \
-    ui/musicwindow.ui \
-    ui/seesheets.ui
+    ui/skillwindow.ui \
+    ui/addskillwindow.ui \
+    ui/addentitywindow.ui \
+    ui/addskilltoentity.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

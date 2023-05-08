@@ -7,23 +7,27 @@ class Skill : public Sheet
 {
 public:
     /**
-     * @brief enpty constructor of Skill class
+     * @brief Skill class empty constructor
      */
     Skill();
     /**
-     * @brief Initiliazed Skill class constructor
-     * @param name of the skill
-     * @param description of the skill
-     * @param texturePath of the skill
-     * @param stats array of the skill
+     * @brief Skill class initiliazed constructor
+     * @param[in] name The name of the skill
+     * @param[in] description The description of the skill
+     * @param[in] texturePath The full path to the picture of the skill
+     * @param[in] stats The stat array of the skill
      */
-    Skill(const QString name,
-          const QString description,
-          const QString texturePath,
+    Skill(const QString & name,
+          const QString & description,
+          const QString & texturePath,
           const QVector<Stat> & stats);
-    /**
-     * @brief destructor of Skills
-     */
     ~Skill();
+
+    /**
+     * @fn addSkillToArray
+     * @brief Add the skill to an array
+     * @param[in] skillsArray The array where the skill will be added
+     */
+    void addSkillToArray(QVector<Skill> & skillsArray);
 };
 #endif

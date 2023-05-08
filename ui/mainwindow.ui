@@ -41,6 +41,30 @@ selection-background-color: rgb(154, 154, 154);</string>
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="itemWindowButton">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(70, 70, 70);
+color: rgb(255, 255, 255);
+selection-background-color: rgb(154, 154, 154);</string>
+          </property>
+          <property name="text">
+           <string>Gestion des items</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="skillWindowButton">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(70, 70, 70);
+color: rgb(255, 255, 255);
+selection-background-color: rgb(154, 154, 154);</string>
+          </property>
+          <property name="text">
+           <string>Gestion des skills</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="entityWindowButton">
           <property name="styleSheet">
            <string notr="true">background-color: rgb(70, 70, 70);
@@ -49,30 +73,6 @@ selection-background-color: rgb(154, 154, 154);</string>
           </property>
           <property name="text">
            <string>Gestion des entitées</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="newEntityButton">
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(70, 70, 70);
-color: rgb(255, 255, 255);
-selection-background-color: rgb(154, 154, 154);</string>
-          </property>
-          <property name="text">
-           <string>Créer une entité</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="musicButton">
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(70, 70, 70);
-color: rgb(255, 255, 255);
-selection-background-color: rgb(154, 154, 154);</string>
-          </property>
-          <property name="text">
-           <string>Musique</string>
           </property>
          </widget>
         </item>
@@ -88,6 +88,19 @@ selection-background-color: rgb(154, 154, 154);</string>
           </property>
          </widget>
         </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </item>
       <item>
@@ -100,8 +113,8 @@ selection-background-color: rgb(154, 154, 154);</string>
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>623</width>
-           <height>549</height>
+           <width>657</width>
+           <height>557</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -126,7 +139,7 @@ selection-background-color: rgb(154, 154, 154);</string>
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFichier">

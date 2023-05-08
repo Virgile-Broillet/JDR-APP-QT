@@ -13,22 +13,18 @@ class addstatwindow : public QDialog
     Q_OBJECT
 
 public:
-
     /**
-     * @brief Constructor of the QDialog addStatWindow
-     * @param[in] parent, main QDialog
-     * @param[in, out] statsArray Qvecor of String from game.h
+     * @brief Window constructor to add stats
+     * @param[in] statsNames the array of declared stats in the game
+     * @param parent
      */
     explicit addstatwindow(const QVector<QString> & statsNames, QWidget *parent = nullptr);
+    ~addstatwindow();
 
     /**
-     * @brief Destructor of addStatWindow
-     */
-    ~addstatwindow();
-    /**
      * @fn statsNames
-     * @brief
-     * @return the new statNames array
+     * @brief Get the current array of stats names
+     * @return The new statNames array
      */
     QVector<QString> getStatsNames();
 
@@ -36,45 +32,50 @@ private slots:
 
     /**
      * @fn onAddStatClicked
-     * @brief on click add a stat with all his informations in QVector<QString> stats
+     * @brief Add a stat
      */
     void onAddStatClicked();
     /**
      * @fn onDelStatClicked
-     * @brief on click delete the selected stat and all his informations in QVector<QString> stats
+     * @brief Delete the selected stat
      */
     void onDelStatClicked();
     /**
      * @fn leaveAndSave
-     * @brief leave and SAVE the stats informations in QVector<QString> stats
+     * @brief Leave and SAVE the stats
      */
     void leaveAndSave();
     /**
      * @fn leave
-     * @brief leave WITHOUT saving the stats informations in QVector<QString> stats
+     * @brief leave WITHOUT saving the stats
      */
     void leave();
     /**
      * @fn closeEvent
-     * @brief summons the MessageBox when closing the QDialog
+     * @brief summons the MessageBox when closing the window
+     * @param[in] event Pointer on the event "close the dialog"
      */
     void closeEvent(QCloseEvent *event);
 
 private:
     /**
-     * @brief boolean true if stat data were saved, false otherwise
+     * @brief True if stat data were saved, false otherwise
+     * @var save
      */
     bool save;
     /**
-     * @brief pointer to the ui of addStatWindow
+     * @brief Pointer to the window ui
+     * @var ui
      */
     Ui::addstatwindow *ui;
     /**
-     * @brief create a QVector <QString> to work on
+     * @brief Working array of stat
+     * @var stats
      */
     QVector<QString> stats;
     /**
      * @brief cThe old state of Vector stats without the last save
+     * @var oldStats
      */
     QVector<QString> oldStats;
     /**

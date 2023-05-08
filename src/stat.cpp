@@ -2,14 +2,14 @@
 #include <QString>
 
 Stat::Stat(){};
-Stat::Stat(QString name, int min, int max, int value)
+Stat::Stat(const QString &name, const int min, const int max, const int value)
 {
     this->min = min;
     this->max = max;
     this->val = value;
     this->name = name;
 }
-Stat::Stat(QString name)
+Stat::Stat(const QString &name)
 {
     this->min = 0;
     this->max = 0;
@@ -48,19 +48,11 @@ void Stat::setValue(const int val)
 {
     this->val = val;
 }
-void Stat::setName(const QString name)
+void Stat::setName(const QString & name)
 {
     this->name = name;
 }
 bool Stat::operator==(const QString name) const
 {
     return (this->name.compare(name) == 0);
-}
-void Stat::setIconPath(const QString filepath)
-{
-    this->iconPath = filepath;
-}
-QString Stat::getIconPath()const
-{
-    return this->iconPath;
 }

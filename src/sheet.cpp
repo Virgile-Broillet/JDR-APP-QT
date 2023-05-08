@@ -2,9 +2,9 @@
 #include <iostream>
 
 Sheet::Sheet(){}
-Sheet::Sheet(const QString name,
-             const QString description,
-             const QString texturePath,
+Sheet::Sheet(const QString &name,
+             const QString &description,
+             const QString &texturePath,
              const QVector<Stat> & stats)
 {
     this->name = name;
@@ -18,7 +18,7 @@ QString Sheet::getName()const
 {
     return this->name;
 }
-void Sheet::setName(const QString name)
+void Sheet::setName(const QString & name)
 {
     this->name = name;
 }
@@ -79,13 +79,11 @@ void Sheet::writeJson(QJsonObject &json, const QString & listIterator) const
         QString minKey = this->name + "statMin" + iterator + listIterator;
         QString maxKey = this->name + "statMax" + iterator + listIterator;
         QString valKey = this->name + "statVal" + iterator + listIterator;
-        QString iconKey = this->name + "statIcon" + iterator + listIterator;
 
         json[nameKey] = this->stats.at(i).getName();
         json[minKey] = this->stats.at(i).getMin();
         json[maxKey] = this->stats.at(i).getMax();
         json[valKey] = this->stats.at(i).getValue();
-        json[iconKey] = this->stats.at(i).getIconPath();
     }
 }
 void Sheet::readJson(const QJsonObject &json, const QString & listIterator)
@@ -120,7 +118,6 @@ void Sheet::readJson(const QJsonObject &json, const QString & listIterator)
         QString keyMin = this->name + "statMin" + iterator + listIterator;
         QString keyMax = this->name + "statMax" + iterator + listIterator;
         QString keyVal = this->name + "statVal" + iterator + listIterator;
-        QString keyIcon = this->name + "statIcon" + iterator + listIterator;
 
         Stat newStat;
         if (json.contains(keyName) && json[keyName].isString())
@@ -139,21 +136,17 @@ void Sheet::readJson(const QJsonObject &json, const QString & listIterator)
         {
             newStat.setValue(json[keyVal].toInt());
         }
-        if (json.contains(keyIcon) && json[keyIcon].isString())
-        {
-            newStat.setIconPath(json[keyIcon].toString());
-        }
         this->stats.push_back(newStat);
     }
 }
-bool Sheet::save(QString & filename)
+bool Sheet::save(const QString & filepath)
 {
-    if (!filename.endsWith(".json")) //file extension must be .json
+    if (!filepath.endsWith(".json")) //file extension must be .json
     {
         qWarning("Wrong file extension.");
         return false;
     }
-    QFile saveFile(filename);
+    QFile saveFile(filepath);
     if (!saveFile.open(QIODevice::WriteOnly))
     {
         qWarning("Couldn't open save file.");
@@ -165,24 +158,15 @@ bool Sheet::save(QString & filename)
     saveFile.close();
     return true;
 }
-bool Sheet::save()
+bool Sheet::load(const QString & filepath)
 {
-    //generate a name for the save file -> name + current date
-    QString filename = this->name
-                     + "_"
-                     + QDateTime::currentDateTimeUtc().toString("dd_MM_yyyy")
-                     + ".json";
-    return save(filename);
-}
-bool Sheet::load(const QString & filePath)
-{
-    if (!filePath.endsWith(".json")) //file extension must be .json
+    if (!filepath.endsWith(".json")) //file extension must be .json
     {
         qWarning("Wrong file extension.");
         return false;
     }
     //this make the path fixed to data/<classname>_<filename>
-    QFile loadFile(filePath);
+    QFile loadFile(filepath);
     if (!loadFile.open(QIODevice::ReadOnly))
     {
         qWarning("Couldn't open save file.");
@@ -193,4 +177,17 @@ bool Sheet::load(const QString & filePath)
     this->readJson(json, "000");
     loadFile.close();
     return true;
+}
+
+QVector<Stat> Sheet::getStats() const
+{
+    return this->stats;
+}
+QVector<Stat> & Sheet::getStatsAdress()
+{
+    return this->stats;
+}
+void Sheet::setStats(const QVector<Stat> & statsBase)
+{
+    this->stats = statsBase;
 }

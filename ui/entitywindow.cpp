@@ -1,81 +1,108 @@
 #include "entitywindow.h"
 #include "ui_entitywindow.h"
-#include "addentity.h"
+#include "addentitywindow.h"
+
 #include <QFileDialog>
 
-EntityWindow::EntityWindow(const QVector<Entity> & entitiesBase, QWidget *parent) :
+EntityWindow::EntityWindow(const QVector<QString> & statsNamesBase,
+                           const QVector<Entity> & entitiesBase,
+                           const QVector<Item> & itemsBase,
+                           const QVector<Skill> & skillsBase,
+                           QWidget *parent) :
     QDialog(parent),
     ui(new Ui::EntityWindow)
 {
     ui->setupUi(this);
     this->entities = entitiesBase;
+    this->items = itemsBase;
+    this->skills = skillsBase;
+    this->statsNames = statsNamesBase;
 
     model = new QStringListModel();
-    QStringList list = populate(this->entities);
-    model->setStringList(list);
-    ui->entityListView->setModel(model);
+    this->updateModel();
 
-    connect(ui->addPushButton, &QPushButton::clicked, this, &EntityWindow::addEntityFun);
-    connect(ui->deletePushButton, &QPushButton::clicked, this, &EntityWindow::removeEntity);
-    connect(ui->loadPushButton, &QPushButton::clicked, this, &EntityWindow::loadEntity);
-    connect(ui->savePushButton, &QPushButton::clicked, this, &EntityWindow::saveEntity);
-    connect(ui->showPushButton, &QPushButton::clicked, this, &EntityWindow::showEntity);
-    connect(ui->modifyPushButton, &QPushButton::clicked, this, &EntityWindow::modifyEntity);
+    connect(ui->addPushButton, &QPushButton::clicked, this, &EntityWindow::add);
+    connect(ui->deletePushButton, &QPushButton::clicked, this, &EntityWindow::remove);
+    connect(ui->loadPushButton, &QPushButton::clicked, this, &EntityWindow::load);
+    connect(ui->savePushButton, &QPushButton::clicked, this, &EntityWindow::save);
+    connect(ui->modifyPushButton, &QPushButton::clicked, this, &EntityWindow::modify);
 }
+
 EntityWindow::~EntityWindow()
 {
     delete model;
     delete ui;
 }
+
 void EntityWindow::updateModel()
 {
     QStringList list = populate(this->entities);
     model->setStringList(list);
     ui->entityListView->setModel(model);
 }
-QVector<Entity> EntityWindow::getEntities(void)
+QVector<Entity> EntityWindow::getEntities()
 {
     return this->entities;
 }
-void EntityWindow::addEntityFun()
+QStringList EntityWindow::populate(const QVector<Entity> & entities)
 {
-    addEntity * win = new addEntity(this->entities);
-    win->exec();
-    updateModel();
-}
-
-void EntityWindow::modifyEntity()
-{
-
-}
-void EntityWindow::removeEntity()
-{
-    if(model->rowCount() > 0)
+    QStringList list;
+    for(int i = 0; i < entities.count(); ++i)
     {
-        QModelIndex i = ui->entityListView->currentIndex();
-        entities.removeAt(i.row());
-        updateModel();
+        list << entities.at(i).getName();
+    }
+    return list;
+}
+void EntityWindow::add()
+{
+    AddEntityWindow * win = new AddEntityWindow(this->statsNames, this->items, this->skills);
+    connect(win, &AddEntityWindow::onEntityAdded, this, &EntityWindow::addNewEntity);
+    win->exec();
+    this->updateModel();
+    disconnect(win, &AddEntityWindow::onEntityAdded, this, &EntityWindow::addNewEntity);
+    delete win;
+}
+void EntityWindow::modify()
+{
+    int index = ui->entityListView->currentIndex().row();
+    if(index > -1)
+    {
+        AddEntityWindow * win = new AddEntityWindow(this->statsNames, this->items, this->skills, &this->entities[index]);
+        win->exec();
+        this->updateModel();
+        delete win;
     }
 }
-void EntityWindow::showEntity()
+void EntityWindow::remove()
 {
-
+    int index = ui->entityListView->currentIndex().row();
+    if(index > -1)
+    {
+        entities.removeAt(index);
+        this->updateModel();
+    }
 }
-void EntityWindow::loadEntity()
+void EntityWindow::addNewEntity(Entity & toAdd)
 {
-    QString filePath = QFileDialog::getOpenFileName(this, tr("Charger une entité"), "data/saves",
+    toAdd.addEntityToArray(this->entities);
+}
+void EntityWindow::load()
+{
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Charger un item"), "data/saves",
                                                       tr("JSON (*.json)"));
     Entity e;
-    e.load(filePath);
-    e.addEntityToArray(this->entities);
-    updateModel();
-}
-void EntityWindow::saveEntity()
-{
-    if(model->rowCount() > 0)
+    if(e.load(filePath))
     {
-        QModelIndex i = ui->entityListView->currentIndex();
-        Entity toSave = entities.at(i.row());
+        e.addEntityToArray(this->entities);
+        this->updateModel();
+    }
+}
+void EntityWindow::save()
+{
+    int index = ui->entityListView->currentIndex().row();
+    if((model->rowCount() > 0) && (index >= 0))
+    {
+        Entity toSave = entities.at(index);
          QString baseFilePath = "data/saves/"
                  + QString(typeid(toSave).name())
                  + "_"
@@ -87,13 +114,4 @@ void EntityWindow::saveEntity()
                                                           tr("JSON (*.json)"));
         toSave.save(filePath);
     }
-}
-QStringList EntityWindow::populate(const QVector<Entity> & entities)
-{
-    QStringList list;
-    for(int i = 0; i < entities.count(); ++i)
-    {
-        list << entities.at(i).getName();
-    }
-    return list;
 }

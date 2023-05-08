@@ -14,119 +14,130 @@ class Sheet
 {
 
 public:
+    /**
+     * @brief Sheet class empty constructor
+     */
     Sheet();
     /**
-     * @brief Sheet initialized constructor
-     * @param[in] name of the sheet
-     * @param[in] description of the sheet
-     * @param[in] texturePath of the sheet
-     * @param[in] stats array of the sheet
+     * @brief Sheet class initialized constructor
+     * @param [in] name of the sheet
+     * @param [in] description of the sheet
+     * @param [in] texturePath of the sheet
+     * @param [in] stats array of the sheet
      */
-    Sheet(const QString name,
-          const QString description,
-          const QString texturePath,
+    Sheet(const QString & name,
+          const QString & description,
+          const QString & texturePath,
           const QVector<Stat> & stats);
-    ~Sheet();
+    virtual ~Sheet();
+
     /**
      * @fn getName
-     * @brief get the name of the sheet
-     * @return the name of the sheet
+     * @brief Get the name of the sheet
+     * @return The name of the sheet
      */
     QString getName() const;
     /**
      * @fn setName
-     * @brief set the name of the sheet
-     * @param name of the sheet
+     * @brief Set the name of the sheet
+     * @param [in] name The name of the sheet
      */
-    void setName(const QString name);
+    void setName(const QString & name);
     /**
      * @fn getDescription
-     * @brief get hte description of the sheet
-     * @return The description in a QString
+     * @brief Get hte description of the sheet
+     * @return The description of the sheet
      */
     QString getDescription()const;
     /**
      * @fn setDescription
-     * @brief set the description of the sheet
-     * @param description of the sheet
+     * @brief Set the description of the sheet
+     * @param [in] description The description of the sheet
      */
     void setDescription(const QString description);
     /**
      * @fn getTexturePath
-     * @brief get the texture path to the picture of the sheet
+     * @brief Get the texture path to the picture of the sheet
      * @return the texture path of the picture of the sheet
      */
     QString getTexturePath()const;
     /**
      * @fn setTexturePath
-     * @brief set the texture path to the picture of the sheet
-     * @param texturePath of the picture
+     * @brief Set the texture path to the picture of the sheet
+     * @param [in] texturePath The full path to the picture
      */
     void setTexturePath(const QString texturePath);
     /**
      * @fn getStats
-     * @brief get stats list
-     * @return stat list
+     * @brief Get the stat array of the sheet
+     * @return The stat array of the sheet
      */
     QList<Stat> getStats()const;
     /**
      * @fn updateStats
-     * @brief update the list of stat to only constain all declared stats
-     * @param statsNames the list of stats names
+     * @brief Update the list of stat to only contain all declared stats
+     * @param [in] statsNames The list of stats names declared
      */
     void updateStats(const QVector<QString> & statsNames);
     /**
      * @fn writeJson
-     * @brief write a sheet insite a json array
-     * @param[in,out] json array of the sheet to write
+     * @brief Write a sheet inside a buffer
+     * @param [in, out] json Buffer to write data
+     * @param [in] listIterator Must be different for 2 sheets saved in the same json
      */
     virtual void writeJson(QJsonObject & json, const QString & listIterator) const;
     /**
      * @fn readJson
-     * @brief read a sheet insite a json array
-     * @param[in,out] json array of the sheet to read
+     * @brief Read an entity from a buffer
+     * @param [in, out] json Buffer to read data
+     * @param [in] listIterator Must be the same used to save the sheet
      */
     virtual void readJson(const QJsonObject & json, const QString & listIterator);
     /**
      * @fn save
-     * @brief save a QjsonObject into a file
-     * @param filename of the save
-     * @return true if succesfull, false if not
+     * @brief Save the sheet into a file
+     * @param [in] filepath The full path of the save file
+     * @return True if saving was succesfull, else false
      */
-    bool save(QString & filename);
-    /**
-     * @fn save
-     * @brief save a QjsonObject into a file with a name automatically generated
-     * @return true if succesfull, false if not
-     */
-    bool save();
+    bool save(const QString & filepath);
     /**
      * @fn load
-     * @brief load a sheet from a file
-     * @param filename of the name of file to load, not the path
-     * @return true if succesfull, false if not
+     * @brief Load a sheet from a file
+     * @param [in] filepath The full path of the save file
+     * @return True if loading was succesfull, else false
      */
-    bool load(const QString &filename);
+    bool load(const QString & filepath);
+    /**
+     * @fn getStatsAdress
+     * @brief Get the memory adress of the stat array of the sheet
+     * @return The memory adress of the stat array of the sheet
+     */
+    QVector<Stat> & getStatsAdress();
+    /**
+     * @fn setStats
+     * @brief Replace the stat array of the sheet
+     * @param [in] statsBase The replacement
+     */
+    void setStats(const QVector<Stat> & statsBase);
 
 protected:
     /**
-     * @brief name
+     * @brief The name of the sheet
      * @var name
-     * @todo restrict size
      */
     QString name;
     /**
-     * @brief description
+     * @brief The description of the sheet
      * @var description
      */
     QString description;
     /**
-     * @brief Stats list
-     * @var entityStats
+     * @brief The stat array of the sheet
+     * @var stats
      */
     QVector<Stat> stats;
     /**
-     * @brief path of the main picture
+     * @brief Fullpath to the main picture
      * @var texturePath
      */
     QString texturePath;

@@ -2,13 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "../include/game.h"
-#include "../include/entity.h"
 
-#include "seesheets.h"
-#include "addstatwindow.h"
-#include "musicwindow.h"
-#include "addentity.h"
+#include "../include/game.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,82 +14,84 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-
     /**
-     * @brief Construcor of the MainWindow
-     * @param[in] parent nullptr
+     * @brief Window constructor of the main window
+     * @param parent
      */
     explicit MainWindow(QWidget *parent = nullptr);
-
-    /**
-     * @brief Destructor of the MainWindow
-     */
     ~MainWindow();
 
 private slots:
 
     /**
-     * @fn openMusic
-     * @brief open the QDialog of musicWindow
-     */
-    void openMusic (void);
-    /**
      * @fn openEntityWindow
-     * @brief open the managing window of entities
+     * @brief Open the window to manage entities
      */
-    void openEntityWindow (void);
+    void openEntityWindow();
     /**
-     * @fn openAddEntity
-     * @brief open the QDialog of addEntity
+     * @fn openItemWindow
+     * @brief Open the window to manage entities items
      */
-    void openAddEntity (void);
+    void openItemWindow();
+    /**
+     * @fn openSkillWindow
+     * @brief Open the window to manage entities skills
+     */
+    void openSkillWindow();
     /**
      * @fn about
-     * @brief gives the informations in the Help -> about section
+     * @brief Open the window "about"
      */
-    void about (void);
+    void about();
     /**
      * @fn contact
-     * @brief gives the informations in the Help -> contact section
+     * @brief Open the window "contact"
      */
-    void contact (void);
+    void contact();
     /**
-     * @fn addStat
-     * @brief open the QDialog of addStatWindow
+     * @fn openStatWindow
+     * @brief Open the window to manage stats names
      */
-    void addStat ();
+    void openStatWindow();
     /**
      * @fn newGame
-     * @brief create a new game when clicked on file -> new game
+     * @brief Create a new game
      */
-    void newGame (void);
+    void newGame();
     /**
      * @fn changeBackground
-     * @brief change the map background
+     * @brief Change the map background
      */
     void changeBackground();
+    /**
+     * @fn save
+     * @brief Save the current game in a Json file
+     */
+    void save();
+    /**
+     * @fn load
+     * @brief Load a Json file and overwrite the current game with its data
+     */
+    void load();
 
 private:
     /**
-     * @brief currentGame used in all the windows of the app
+     * @brief The current game
+     * @var currentGame
      */
     Game currentGame;
     /**
-     * @brief pointer to the ui of MainWindow
+     * @brief Pointer to the window ui
+     * @var ui
      */
     Ui::MainWindow *ui;
+
     /**
-     * @brief pointer to the QDialog (Window) of Music
+     * @fn loadBackground
+     * @brief Display the map texture
+     * @param filePath The fullpath of the picture that will be displayed
      */
-    MusicWindow * music;
-    /**
-     * @brief pointer to the QDialog (Window) of seeSheets
-     */
-    seeSheets * fiche;
-    /**
-     * @brief pointer to the QDialog (Window) of addEntity
-     */
-    addEntity * entity;
+    void loadBackground(QString filePath);
 };
 
 #endif // MAINWINDOW_H
